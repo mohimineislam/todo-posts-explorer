@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 
 function PostDetail() {
   const { id } = useParams();
@@ -9,9 +9,9 @@ function PostDetail() {
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Post not found');
-        return response.json();
+      .then((res) => {
+        if (!res.ok) throw new Error("Post not found");
+        return res.json();
       })
       .then((data) => {
         setPost(data);
@@ -23,51 +23,75 @@ function PostDetail() {
       });
   }, [id]);
 
-  if (loading) return <div className="app-container"><p>Loading post details...</p></div>;
-  if (error) return <div className="app-container"><p style={{ color: 'var(--error)' }}>Error: {error}</p></div>;
+  if (loading)
+    return (
+      <div className="app-container">
+        <p>Loading post details...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="app-container">
+        <p className="error-text">Error: {error}</p>
+      </div>
+    );
 
   return (
-    <div className="post-detail-page" style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <Link to="/posts" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
+    <section className="post-detail-page">
+      <Link to="/posts" className="back-link">
         ← Back to Articles
       </Link>
-      
+
       {post && (
-        <article className="glass-card" style={{ padding: '3rem' }}>
-          <header style={{ position: 'static', background: 'none', border: 'none', padding: 0, backdropFilter: 'none', marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-              <span className="badge" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
+        <article className="glass-card post-detail-card">
+          {/* HEADER */}
+          <header className="post-header">
+            <div className="post-badges">
+              <span className="badge badge-primary">
                 Article #{post.id}
               </span>
-              <span className="badge" style={{ background: 'rgba(236, 72, 153, 0.1)', color: 'var(--secondary)', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
+              <span className="badge badge-secondary">
                 User {post.userId}
               </span>
             </div>
-            <h1 style={{ fontSize: '2.5rem', lineHeight: '1.2' }}>{post.title}</h1>
+
+            <h1 className="post-detail-title">{post.title}</h1>
           </header>
 
-          <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--text-primary)', opacity: 0.9 }}>
-            {post.body}
-            {/* Adding some dummy text to make it look like a real article */}
-            <br /><br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          </p>
+          {/* CONTENT */}
+          <div className="post-body">
+            <p>
+              {post.body}
+              <br /><br />
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
 
-          <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(45deg, var(--primary), var(--secondary))' }}></div>
+          {/* FOOTER */}
+          <footer className="post-footer">
+            <div className="author-info">
+              <div className="author-avatar" />
               <div>
-                <p style={{ fontWeight: '600', fontSize: '0.9rem' }}>Written by Author {post.userId}</p>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>Feb 5, 2026 • 5 min read</p>
+                <p className="author-name">
+                  Written by Author {post.userId}
+                </p>
+                <p className="author-meta">
+                  Feb 5, 2026 • 5 min read
+                </p>
               </div>
             </div>
+
             <button className="btn-primary" onClick={() => window.print()}>
-               Print Article
+              🖨️ Print Article
             </button>
-          </div>
+          </footer>
         </article>
       )}
-    </div>
+    </section>
   );
 }
 
